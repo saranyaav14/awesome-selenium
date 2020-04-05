@@ -6,11 +6,18 @@ package library.testBase;
 public class Browser {
 
     /**
+     * Returns path of remote driver
+     * @return
+     */
+    public static String getPathOfDriver(){
+        ClassLoader classLoader = Browser.class.getClassLoader();
+        return classLoader.getResource("chromedriver.exe").getPath();
+    }
+
+    /**
      * Set up chrome driver path
      */
     public  static void setChromeProperties(){
-//        DesiredCapabilities capabilities = new DesiredCapabilities();
-//        capabilities.setCapability("chrome.driver","78.0");
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\test\\Documents\\awsome-selenium\\rb\\src\\main\\resources\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", getPathOfDriver());
     }
 }

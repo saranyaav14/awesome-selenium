@@ -19,6 +19,8 @@ public class TestBase {
     public Logger logger = Logger.getLogger(TestBase.class.getName());
     private static String HEADER_TEMPLATE = "//header[@id='%1$s']";
     private static String BUTTON_TEMPLATE = "//button[contains(.,'%1$s')]";
+    private static String BUTTON_TEMPLATE_ONE = "//div[text()='%1$s']";
+    private static String TEXT_BOX_TEMPLATE = "//input[@id='%1$s']";
 
     /**
      * Redirect page to given url
@@ -59,8 +61,8 @@ public class TestBase {
     /**
      * Make webdriver to Wait for given amount of time
      */
-    public void waitForPageLoad(){
-        getDriver().manage().timeouts().pageLoadTimeout(6, TimeUnit.SECONDS);
+    public static void waitForPageLoad(){
+        getDriver().manage().timeouts().pageLoadTimeout(15, TimeUnit.SECONDS);
     }
 
     /**
@@ -83,9 +85,6 @@ public class TestBase {
         WebElement dropdown = wait.until(ExpectedConditions.presenceOfElementLocated((By.xpath(locator))));
         List<WebElement> dropdownValues =  getDriver().findElements(By.xpath(locator));
         for (WebElement dropdownValue : dropdownValues) {
-//            logger.info("value is"+dropdownValue.getText());
-//            String actual = dropdownValue.getText();
-
             if (dropdownValue.
                     getText().contentEquals(value)) {
                 logger.info("------------------ inside if block-----------------------------------");
@@ -111,5 +110,31 @@ public class TestBase {
     public void clickButton(String element){
         WebElement btn = driver.findElement(By.xpath(String.format(BUTTON_TEMPLATE,element)));
         btn.click();
+    }
+    /**
+     * Make webdriver to Wait for given amount of time
+     */
+    public void waitForPage(){
+        getDriver().manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
+    }
+
+    /**
+     * Clicks on button
+     */
+    public void clickOnButton(String locator) {
+        getDriver().findElement(By.xpath(String.format(BUTTON_TEMPLATE_ONE,locator))).click();
+    }
+    /**
+     * Adds text to textbox
+     */
+    public void addTextToTextBox(String locator,String text){
+        getDriver().findElement(By.xpath(String.format(TEXT_BOX_TEMPLATE,locator))).sendKeys(text);
+    }
+
+    /**
+     * Clear text from textbox
+     */
+    public void clearTextFromTextBox(String locator){
+        getDriver().findElement(By.xpath(String.format(TEXT_BOX_TEMPLATE,locator))).clear();
     }
 }

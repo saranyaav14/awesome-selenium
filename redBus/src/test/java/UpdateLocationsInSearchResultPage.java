@@ -1,12 +1,11 @@
+import library.components.Constant;
 import library.pages.CommonMethods;
+import library.pages.HomePage;
 import library.pages.SearchResultPage;
+import library.testBase.TestBase;
 import library.testBase.Util;
 import org.junit.Before;
 import org.junit.Test;
-
-import library.pages.HomePage;
-import library.testBase.TestBase;
-import library.components.Constant;
 
 import java.util.Map;
 
@@ -16,7 +15,8 @@ import static library.testBase.WebDriverService.getDriver;
 /**
  * This is a test class which will search buses for given from and to locations and for given date
  */
-public class SearchForBuses extends TestBase {
+public class UpdateLocationsInSearchResultPage<futureDayDetails> extends TestBase {
+
     String month = HomePage.Month.MAR.getMonth();
     String year = "2020";
     String fromLocation = "Kanchipuram";
@@ -26,14 +26,13 @@ public class SearchForBuses extends TestBase {
     Map<String,String> currentDayDetails;
     String  futureDay;
 
+
     @Before
     public void getCurrentDayDetails(){
         Util util = new Util();
         currentDayDetails = util.getCurrentDateDetails();
-        futureDay = util.increaseCurrentDateByXDays(2);
-
+        futureDay = util.increaseCurrentDateByXDays(2).replaceAll("0","");
     }
-
 
     /**
      * test method
@@ -43,7 +42,6 @@ public class SearchForBuses extends TestBase {
 
         logger.info("SET UP WEB DRIVER");
         setChromeProperties();
-
 
         logger.info("GO TO URL");
         launchPage(Constant.BASE_URL);
@@ -57,14 +55,14 @@ public class SearchForBuses extends TestBase {
 
         logger.info("SELECT FROM DATE");
         waitForPageLoad();
-        homePage.selectMonthAndYear(year,month);
+        homePage.selectMonthAndYear(currentDayDetails.get("year"),currentDayDetails.get("month"));
         homePage.selectDate(currentDayDetails.get("day"));
         waitForPageLoad();
 
         logger.info("SELECT TO DATE");
         homePage.clickDatePicker(HomePage.DateLocator.RETURN_DATE.toString());
         waitForPageLoad();
-        homePage.selectMonthAndYear(year,month);
+        homePage.selectMonthAndYear(currentDayDetails.get("year"),currentDayDetails.get("month"));
         homePage.selectDate(futureDay);
 
         logger.info("CLICK ON SEARCH BUTTON");
@@ -76,31 +74,23 @@ public class SearchForBuses extends TestBase {
         waitForPage();
         searchResultPage.printDetails();
 
-        logger.info("MOIDIFY FROM TO PLACES");
+        logger.info("MODIFY FROM AND TO PLACES");
+        waitForPageLoad();
         searchResultPage.clickOnButton(SearchResultPage.Button.MODIFY.getButton());
         CommonMethods common = new CommonMethods();
         clearTextFromTextBox(SearchResultPage.Location.FROM_LOCATION.toString());
-        common.enterLocation(HomePage.Location.FROM_LOCATION.getLocation(),"Trichy");
-        common.selectLocationFromDropdown("Trichy)");
+        waitForPageLoad();
+        common.enterLocation(HomePage.Location.FROM_LOCATION.getLocation(),modifiedFromLocation);
+        waitForPageLoad();
+        common.selectLocationFromDropdown(modifiedFromLocation);
         waitForPageLoad();
         clearTextFromTextBox(SearchResultPage.Location.TO_LOCATION.toString());
-        common.enterLocation(HomePage.Location.TO_LOCATION.getLocation(),"Chennai (All Locations)");
         waitForPageLoad();
-        waitForPage();
-        common.selectLocationFromDropdown("Chennai (All Locations)");
+        common.enterLocation(HomePage.Location.TO_LOCATION.getLocation(),modifiedToLocation);
+        waitForPageLoad();
+        common.selectLocationFromDropdown(modifiedToLocation);
 
-        logger.info("SELECT FROM DATE");
-        waitForPageLoad();
-        searchResultPage.clickDatePicker(HomePage.DateLocator.ONWARD_DATE.toString());
-        homePage.selectMonthAndYear(year,month);
-        homePage.selectDate(futureDay);
-        waitForPageLoad();
-
-        logger.info("SELECT TO DATE");
-        homePage.clickDatePicker(HomePage.DateLocator.RETURN_DATE.toString());
-        waitForPageLoad();
-        homePage.selectMonthAndYear(currentDayDetails.get("year"),currentDayDetails.get("month"));
-        homePage.selectDate(futureDay);
+        logger.info("CLICK SEARCH BUTTON");
         searchResultPage.clickButton(SearchResultPage.Button.SEARCH.getButton());
 
         logger.info("QUITS DRIVER");

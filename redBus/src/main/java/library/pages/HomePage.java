@@ -7,6 +7,7 @@ import static library.testBase.WebDriverService.getDriver;
 
 /**
  * Home Page Class
+ * @author saranya
  */
 public class HomePage extends TestBase {
     private static By TO_TEXT_BOX = By.xpath("//label[contains(.,'FROM')]/preceding::input");
@@ -18,6 +19,7 @@ public class HomePage extends TestBase {
     private static By CALENDER_NEXT_BUTTON = By.xpath("//div[@class='rb-calendar']//td[@class='next']");
     private static String CALENDER_DATE_LOCATOR = "//div[@class='rb-calendar']//td[text()='%1$s']";
     private static String DATE_PICKER_LOCATOR = "//label[contains(.,'Return Date')]";
+    private static String INPUT_TEXT_BOX = "//input[@id='%1$s']";
 
     /**
      * Define location
@@ -70,6 +72,21 @@ public class HomePage extends TestBase {
             this.dateLocator = dateLocator;
         }
     }
+    public enum Key{
+        DAY("day"),
+        YEAR("year"),
+        MONTH("month");
+        private String key;
+
+        public String toString() {
+            return key;
+        }
+
+        Key(String button) {
+            this.key = key;
+        }
+    }
+
 
     /**
      * Define Month
@@ -121,7 +138,7 @@ public class HomePage extends TestBase {
      * @param location
      */
     public void enterLocation(String locatorName, String location) {
-        addText(getDriver().findElement(By.id(locatorName)), location);
+        addText(getDriver().findElement(By.xpath(String.format(INPUT_TEXT_BOX,locatorName))), location);
 
     }
 
@@ -169,7 +186,7 @@ public class HomePage extends TestBase {
             getDriver().findElement(CALENDER_NEXT_BUTTON).click();
             values = getMonthAndYearDetails();
         }
-        while (String.valueOf(values[0]).equals(month) == false) {
+        while (String.valueOf(values[0]).toLowerCase().equals(month.toLowerCase()) == false) {
             getDriver().findElement(CALENDER_NEXT_BUTTON).click();
             values = getMonthAndYearDetails();
         }
