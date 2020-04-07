@@ -22,6 +22,12 @@ public class SearchResultPage extends TestBase {
     private static String CALENDER_DATE_LOCATOR = "//div[@id='rb-calmiddle']//li[@data-date='%1$s']";
     private static String DATE_PICKER_LOCATOR = "//input[@id='%1$s']";
     private static String MONTH_AND_YEAR_LOCATOR = "//div[@id='rb-calmiddle']//span[@id='%1$s']";
+    private static String FILTER_TEMPLATE = "//labels[@title='%1$s']";
+    public static String FILTER_LABEL = "//li[@title='%1$s']";
+    public static String  FILTER_SECTION_DROPPING_POINT_TEMPLATE = "//div[text()='DROPPING POINT']/following::input[1]";
+    public static String DROPPING_POINT_LOCATION_TEMPLATE = "//ul[@class='filterup-list']//li[@data-value='%1$s']";
+    public static String APPLY_BUTTON_TEMPLATE = "//div[text()='APPLY']";
+
 
     /**
      * Define button
@@ -36,6 +42,24 @@ public class SearchResultPage extends TestBase {
         }
 
         Button(String button) {
+            this.button = button;
+        }
+    }
+    /**
+     * Define filter checkout button
+     */
+    public enum Filter {
+        SEATER("SEATER"),
+        SLEEPER("SLEEPER"),
+        AC("AC"),
+        NONAC("NONAC");
+        private String button;
+
+        public String getFilter() {
+            return button;
+        }
+
+        Filter(String button) {
             this.button = button;
         }
     }
@@ -155,6 +179,14 @@ public class SearchResultPage extends TestBase {
      */
     public void clickDatePicker(String type) {
         getDriver().findElement(By.xpath(String.format(DATE_PICKER_LOCATOR, type))).click();
+    }
+    /**
+     * Add dropping point in popup
+     *
+     * @param location
+     */
+    public void addDroppingPoint(String location) {
+        getDriver().findElement(By.xpath(String.format(DROPPING_POINT_LOCATION_TEMPLATE, location))).click();
     }
 
 }

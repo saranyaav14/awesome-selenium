@@ -137,4 +137,10 @@ public class TestBase {
     public void clearTextFromTextBox(String locator){
         getDriver().findElement(By.xpath(String.format(TEXT_BOX_TEMPLATE,locator))).clear();
     }
+    /**
+     * Clicks on button
+     */
+    public WebElement getElement(String locator,String element) {
+        return getDriver().findElement(By.xpath(String.format(locator,element)));
+    }
 }
