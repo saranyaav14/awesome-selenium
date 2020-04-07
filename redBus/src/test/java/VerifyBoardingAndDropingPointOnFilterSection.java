@@ -1,12 +1,10 @@
-import library.pages.CommonMethods;
+import library.components.Constant;
+import library.pages.HomePage;
 import library.pages.SearchResultPage;
+import library.testBase.TestBase;
 import library.testBase.Util;
 import org.junit.Before;
 import org.junit.Test;
-
-import library.pages.HomePage;
-import library.testBase.TestBase;
-import library.components.Constant;
 
 import java.util.Map;
 
@@ -16,13 +14,14 @@ import static library.testBase.WebDriverService.getDriver;
 /**
  * This is a test class which will search buses for given from and to locations and for given date
  */
-public class SearchForBuses extends TestBase {
+public class VerifyBoardingAndDropingPointOnFilterSection extends TestBase {
     String month = HomePage.Month.MAR.getMonth();
     String year = "2020";
     String fromLocation = "Kanchipuram";
     String toLocation = "Coimbatore (All Locations)";
     String modifiedFromLocation = "Trichy";
     String modifiedToLocation = "Chennai (All Locations)";
+    String  droppingPoint = "Adyar";
     Map<String,String> currentDayDetails;
     String  futureDay;
 
@@ -31,7 +30,6 @@ public class SearchForBuses extends TestBase {
         Util util = new Util();
         currentDayDetails = util.getCurrentDateDetails();
         futureDay = util.increaseCurrentDateByXDays(2);
-
     }
 
 
@@ -43,7 +41,6 @@ public class SearchForBuses extends TestBase {
 
         logger.info("SET UP WEB DRIVER");
         setChromeProperties();
-
 
         logger.info("GO TO URL");
         launchPage(Constant.BASE_URL);
@@ -73,10 +70,10 @@ public class SearchForBuses extends TestBase {
 
         logger.info("GET NO OF BUSES");
         SearchResultPage searchResultPage = new SearchResultPage();
-        waitForPage();
-        searchResultPage.printDetails();
+        searchResultPage.clickButton(SearchResultPage.FILTER_SECTION_DROPPING_POINT_TEMPLATE);
+        searchResultPage.addDroppingPoint(droppingPoint);
 
-        logger.info("QUITS DRIVER");
+        logger.info("Add boarding point");
         getDriver().quit();
     }
 }
